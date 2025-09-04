@@ -25,7 +25,7 @@ int main()
 	return 0;
 }
 
-/*
+
 #include <iostream>
 #include <array>
 using namespace std;
@@ -33,8 +33,8 @@ using namespace std;
 int main()
 {
 	const int v1 = 0;
-	auto v2 = std::move(v1);
-	auto&& val1 = v2;		// val1 의 자료형은?
+	auto v2 = std::move(v1);	// int
+	auto&& val1 = v2;			// int&
 }
 
 // val1 : int &
@@ -43,11 +43,10 @@ int main()
 int main()
 {
 	const int* ca = 0;
-	auto val1 = ca;				//???
-	auto&& val2 = val1;			//???
+	auto val1 = ca;				// const int*
+	auto&& val2 = val1;			// const int*&
 }
 
 // val1 : const int *
 // val2 : const int *&
 
-*/
