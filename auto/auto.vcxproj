@@ -125,7 +125,11 @@
   <ItemGroup>
     <ClCompile Include="01_auto.cpp" />
     <ClCompile Include="02_auto.cpp" />
-    <ClCompile Include="auto.cpp" />
+    <ClCompile Include="03_auto.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="01_auto.md" />
+    <None Include="02_auto.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
