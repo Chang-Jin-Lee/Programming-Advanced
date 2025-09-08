@@ -24,9 +24,17 @@
     <ClCompile Include="03_auto.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="listBeginEnd.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="01_auto.md" />
     <None Include="02_auto.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="listBeginEnd.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

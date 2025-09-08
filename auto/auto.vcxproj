@@ -126,10 +126,14 @@
     <ClCompile Include="01_auto.cpp" />
     <ClCompile Include="02_auto.cpp" />
     <ClCompile Include="03_auto.cpp" />
+    <ClCompile Include="listBeginEnd.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="01_auto.md" />
     <None Include="02_auto.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="listBeginEnd.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
