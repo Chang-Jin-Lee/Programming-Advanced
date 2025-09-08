@@ -65,6 +65,22 @@ void refCheck() {
 	cout << typeid(int&).name() << endl;
 }
 
+class Base
+{
+public:
+	virtual ~Base() {}
+};
+
+class Derived1 : public Base {};
+class Derived2 : public Base {};
+
+void F(Base* pB)
+{
+	cout << endl << typeid(pB).name() << endl;
+	if (dynamic_cast<Derived2*>(pB)) cout << "Yes" << endl;
+	else cout << "No" << endl;
+}
+
 //----------------------
 // main
 //----------------------
@@ -81,5 +97,13 @@ int main() {
 	mymax(3.14, 2.71);
 
 	refCheck();
+
+
+	Base* pB = new Derived2;
+	Base* pD = new Derived1;
+
+	F(pB);
+	F(pD);
+
 	return 0;
 }

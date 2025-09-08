@@ -20,9 +20,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="01_typeid.cpp" />
+    <ClCompile Include="02_typeid.cpp" />
+    <ClCompile Include="03_typeid.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="01_typeid.md" />
+    <None Include="02_typeid.md" />
+    <None Include="03_typeid.md" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

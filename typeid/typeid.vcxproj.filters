@@ -18,10 +18,18 @@
     <ClCompile Include="01_typeid.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="02_typeid.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="03_typeid.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="01_typeid.md">
       <Filter>소스 파일</Filter>
     </None>
+    <None Include="02_typeid.md" />
+    <None Include="03_typeid.md" />
   </ItemGroup>
 </Project>
