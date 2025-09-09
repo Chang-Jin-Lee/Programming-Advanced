@@ -1,37 +1,35 @@
+# C++ `typeid` & RTTI 정리(추가 예제)
 
-	````markdown
-	# C++ `typeid` & RTTI 정리(추가 예제)
+## 1. 개념
+- `typeid` 연산자
+- 런타임에 객체의 형식을 확인 가능(RTTI: Run - Time Type Information)
+- 자료형 / 변수 / 식을 입력받아 * *`const type_info & ` 객체 * *반환
 
-	## 1. 개념
-	- `typeid` 연산자
-	- 런타임에 객체의 형식을 확인 가능(RTTI: Run - Time Type Information)
-	- 자료형 / 변수 / 식을 입력받아 * *`const type_info & ` 객체 * *반환
+- C++에서 RTTI 제공 키워드
+- `dynamic_cast< > `
+- `typeid`
 
-	- C++에서 RTTI 제공 키워드
-	- `dynamic_cast< > `
-	- `typeid`
+-- -
 
-	-- -
+## 2. 주요 특징
+1. * *참조, const, volatile은 무시됨**
+-`typeid(char)` == `typeid(const char)` == `typeid(char&)`
 
-	## 2. 주요 특징
-	1. * *참조, const, volatile은 무시됨**
-	-`typeid(char)` == `typeid(const char)` == `typeid(char&)`
+2. * *포인터는 const, volatile 구분**
+-`typeid(char*)`, `typeid(const char*)`, `typeid(volatile char*)` 는 다름
 
-	2. * *포인터는 const, volatile 구분**
-	-`typeid(char*)`, `typeid(const char*)`, `typeid(volatile char*)` 는 다름
+3. * *클래스 타입 출력 시 `class` 키워드 포함됨 * *
 
-	3. * *클래스 타입 출력 시 `class` 키워드 포함됨 * *
+4. * *다형성(polymorphism) 구분 * *
+-부모 클래스에 `virtual` 함수가 있어야 실제 자식 클래스 구분 가능
+- `typeid( * pb)` → `Derived` 출력
 
-	4. * *다형성(polymorphism) 구분 * *
-	-부모 클래스에 `virtual` 함수가 있어야 실제 자식 클래스 구분 가능
-	- `typeid( * pb)` → `Derived` 출력
+-- -
 
-	-- -
+## 3. 출력 예시
 
-	## 3. 출력 예시
-
-	```cpp
-	cout << typeid(char).name();          // char
+```cpp
+cout << typeid(char).name();          // char
 cout << typeid(int).name();           // int
 cout << typeid(__int64).name();       // __int64
 

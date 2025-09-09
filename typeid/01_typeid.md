@@ -1,4 +1,3 @@
-````markdown
 # C++ `typeid` 정리
 
 ## 1. 개념

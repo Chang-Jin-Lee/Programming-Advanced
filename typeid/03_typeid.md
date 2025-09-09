@@ -1,4 +1,3 @@
-````markdown
 # C++ RTTI & 타입 Traits 정리
 
 ## 1. RTTI (Run Time Type Information)
