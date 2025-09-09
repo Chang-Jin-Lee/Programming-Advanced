@@ -1,4 +1,3 @@
-````markdown
 # C++ `decltype` / `declval` / `decltype(auto)` 정리 (심화)
 
 ## 1) 핵심 정의
@@ -161,6 +160,7 @@ auto add(T t, U u) -> decltype(t + u) { return t + u; }
 
 ## 6) 자주 나오는 시험 문제
 
+[Q]
 1. `decltype(a)` 와 `decltype((a))` 의 차이를 설명하라.
 2. `auto` 와 `decltype` 의 차이와 각각의 쓰임새를 비교하라.
 3. `decltype(v[0])` 가 `int&` 인 이유를 설명하라.
@@ -168,5 +168,14 @@ auto add(T t, U u) -> decltype(t + u) { return t + u; }
 5. `decltype(d1 < d2 ? d1 : d2)` 가 `double&` 인 이유를 설명하라.
 6. `std::declval` 의 용도와 런타임 사용 가능 여부를 설명하라.
 7. 동일 타입 두 인수를 받는 3항 반환의 참조 문제를 어떻게 해결할 수 있는가?
+
+[A]
+1. `decltype(a)`는 변수 선언 타입, `decltype((a))`는 표현식 값 범주 반영 → lvalue면 `T&`.
+2. `auto`는 초기값으로부터 추론(cvr 제거), `decltype`은 표현식 타입/범주 그대로.
+3. `v[0]`은 lvalue → `decltype(v[0])` = `int&`.
+4. `decltype(fx())`는 호출 결과 타입, `decltype(fx)`는 함수 타입.
+5. `d1`·`d2` 모두 lvalue `double` → 삼항식도 lvalue → `double&`.
+6. `std::declval`은 unevaluated 문맥에서 가짜 `T&&` 생성, 런타임 사용 불가.
+7. 포인터 경유 반환 or `std::ref`/`std::cref`로 참조 문제 해결.
 
 ---

@@ -1,8 +1,7 @@
-````markdown
 # C++ 템플릿 함수 리턴 타입 정리  
 `auto` / `decltype` / `decltype(auto)` / 후행 리턴 타입(Trailing return type) / 전달 참조(Forwarding reference)
 
-## 1) 문제 상황
+## 1) 핵심 정의
 템플릿 함수에서 결과 타입이 **템플릿 인자에 의존**할 때, 반환/출력 파라미터의 **정확한 타입을 컴파일 타임**에 결정해야 한다.
 
 예)
@@ -11,7 +10,7 @@ template <typename T, typename U>
 void add(T t, U u, ??? result); // result* 에 들어갈 정확한 타입은?
 ````
 
-## 2) 해결 요약
+## 2) 요약
 
 * **출력 파라미터(pointer)**: `decltype(t + u)*`
 * **반환 타입 (C++11)**: 후행 리턴 타입 `auto f(...) -> decltype(표현식)`

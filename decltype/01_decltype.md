@@ -1,4 +1,3 @@
-````markdown
 # C++ `decltype` / `declval` / `decltype(auto)` 정리
 
 ## 1. decltype
@@ -6,11 +5,9 @@
 - 문법:  
   ```cpp
   decltype(식) 변수명;
-````
 
-* 런타임이 아닌 **타입 연산 전용**
+- 런타임이 아닌 **타입 연산 전용**
 
----
 
 ### (1) 기본 규칙
 
