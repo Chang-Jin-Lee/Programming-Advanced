@@ -13,7 +13,8 @@ public:
 
 class Derived : public Base {};
 
-int main() {
+int main()
+{
 	// ------------------------------
 	// (1) 기본 자료형
 	// ------------------------------
@@ -54,3 +55,4 @@ int main() {
 
 	delete pd;
 	return 0;
+}
