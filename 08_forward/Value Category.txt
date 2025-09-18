@@ -1,0 +1,180 @@
+https://modoocode.com/294
+
+// Value Category --------------------------------------------------------------------------
+   
+	C++ 의 모든 식에는 두 가지 꼬리표가 따라다니는데 
+	하나는 		타입 이고, 
+	다른 하나는 	값 카테고리(value category).	
+
+	lvalue 는				좌측값, 
+	prvalue (pure rvalue) 는		순수 우측값,
+	xvalue (eXpiring value) 는		소멸하는 값,
+	glvalue (generalized lvalue) 는 	일반화된 좌측값 	(lvalue + xvalue)
+	rvalue 는				우측값 		(prvalue + xvalue)
+
+	--------------------------------------------------------------------------------------
+				이동 시킬 수 있다		이동 시킬 수 없다
+	정체를 알 수 있다		xvalue			lvalue
+	정체를 알 수 없다		prvalue			쓸모 없음!
+
+
+// lvalue 식 ----------------------------------------------------------------------------------
+
+	'이름'을 가진 대부분의 객체 , 해당 객체의 '주소값'을 취할 수 있다
+	ex) int i;
+
+	변수, 함수의 이름, 어떤 타입의 데이터 멤버 (예컨대 std::endl, std::cin) 등등
+	좌측값 레퍼런스를 리턴하는 함수의 호출식.  std::cout << 1 이나 ++it 같은 것들
+	a = b, a += b, a *= b 같이 복합 대입 연산자 식들 
+	++a, --a 같은  전위 증감 연산자 식들
+	a.m, p->m 과 같이 멤버를 참조할 때. 이 때 m 은 'enum 값'이거나 'static 이 아닌 멤버 함수'인 경우 제외.
+	a[n] 과 같은 배열 참조 식들
+	문자열 리터럴 "hi"  //C/C++에서 모든 리터럴 문자열은 고유의 메모리 주소를 가진다. //읽기 전용 메모리에 위치
+
+
+	class A {
+		static int g();	// static 인 멤버 함수
+		int f();		// static 이 아닌 멤버 함수
+	};
+
+	int main() {
+		A a;		// lvalue
+		a.g;		// <-- ?	lvalue ( static 맴버함수 )
+		a.f;		// <-- ?	lvalue 아님 (prvalue) (비정적맴버함수)
+	}
+
+	void f(int&& a) {
+		a;		// <-- ?	lvalue (변수)  //는 rvalue를 가리키지만, 그렇다고 해서 a가 rvalue인 것은 아니다
+	}
+
+
+
+// prvalue 식 ----------------------------------------------------------------------------------
+
+	정체를 알 수 없는, 즉 주소값을 취할 수 없습니다, 좌측에 올 수 없습니다.
+	우측값 레퍼런스와 상수 좌측값 레퍼런스를 초기화 하는데 사용
+
+	int&& r = 42;
+	const int& rr = 42;	
+	// int& rrr = 42; <-- 불가능
+	// int 42 = a;   <-- 불가능
+
+	문자열 리터럴을 제외 한 모든 리터럴들.  42, true, nullptr 같은 애들
+	레퍼런스가 아닌 것을 리턴하는 함수의 호출식.  예)   str.substr(1, 2),   str1 + str2
+	후위 증감 연산자 식.  a++, a--
+	산술 연산자, 논리 연산자 식들. a + b, a && b, a < b 같은 것들을 말합니다. 물론, 이들은 연산자 오버로딩 된 경우들 말고 디폴트로 제공되는 것들.
+	주소값 연산자 식  &a
+	a.m, p->m 과 같이 멤버를 참조할 때. 이 때 m 은 'enum 값'이거나 'static 이 아닌 멤버 함수'여야 함.
+	this
+	enum 값
+	람다식 [] () { return 0;};
+	비 참조 캐스팅 ( static_cast<double>(x), (int) 42 같은)
+
+
+	int f() { return 10; }	
+	int main() 
+	{
+		f();	// <-- ?	f() 의 값 카테고리는 prvalue  //함수의 호출식 //레퍼런스가 아닌 것을 리턴
+	}
+
+
+// xvalue 식 ----------------------------------------------------------------------------------
+
+	좌측값 처럼 정체가 있지만 이동도 시킬 수 있는 것, 좌측값 이동하기 위해서는 xvalue 로 변경해서 사용해야 함 
+
+		표현식 안에서 구체화된 rvalue의 임시객체
+		rvalue 참조
+		rvalue 참조 캐스팅.  (캐스팅 결과가 rvalue이므로 임시객체로 만든다.)	
+
+	우측값 레퍼런스를 리턴하는 함수의 호출식, 대표적으로 std::move(x)
+		template <class T>
+		constexpr typename std::remove_reference<T>::type&& move(T&& t) noexcept;
+	rvalue 참조를 리턴하는 함수
+		std::move(x)
+	rvalue 참조 배열의 인덱스 접근
+		r[n]
+	rvalue 참조 캐스팅 (  같은)
+		static_cast<int&&>(i)
+
+	컴파일러는 이러한 prvalue를 임시객체에 담은 뒤 구체화하는데. 이러한 데이터성 임시객체를 xvalue라고 한다
+	이 임시객체는 데이터를 제공하기 위해 만들어졌으므로, 내용물을 이동할 수 있고.
+	임시객체는 주소를 갖으므로,  위치성 정보도 갖게된다.
+	다만, 이 임시객체는 컴파일러만 접근할 수 있기 때문에, 직접적으로는 임시객체의 주소를 구할 수 없다.
+
+	이 표현식의 특징 :
+	표현식 도중에 rvalue가 주소를 갖는 임시객체로 구체화된 형태.
+	컴파일러만 사용하기 때문에,  &연산자가 허용되지 않는다.
+	표현식이 끝났을 때 사라진다.
+
+	lvalue 처럼 좌측값 레퍼런스를 초기화 하는데 사용할 수도 있고, 
+	prvalue 처럼 우측값 레퍼런스에 붙이거나 이동 생성자에 전달해서 이동 시킬 수 있습니다.
+
+
+
+// 상황에 따라 달라지는 표현식 ----------------------------------------------------------------------------------
+
+	콤마 연산자 ( a, b, c, ...)
+		맨 우측 값이 lvalue이면, 전체 표현식도 lvalue.
+		맨 우측 값이 xvalue이면, 전체 표현식도 xvalue.
+		맨 우측 값이 prvalue이면, 전체 표현식도 prvalue.
+
+	삼항 연산자 ( a ? b : c )
+		b와 c가 lvalue이면, 전체 표현식도 lvalue.
+		b와 c가 xvalue 이면, 전체 표현식도 xvalue.
+		b와 c가 prvalue이면, 전체 표현식도 prvalue.
+
+	배열 첨자 연산자 ( arr[n] )
+		arr[n]이 lvalue이면, 전체 표현식도 lvalue.  // 다차원배열에서 arr[n]은 또다른 배열의 이름이므로 lvalue ???
+		arr[n]이 xvalue이면, 전체 표현식도 xvalue.
+		arr[n]이 prvalue이면, 전체 표현식도 prvalue.
+		
+
+//-------------------------------------------------------------------------------------------------------------------
+MSDN
+https://docs.microsoft.com/ko-kr/cpp/cpp/lvalues-and-rvalues-visual-cpp?view=msvc-170
+
+Lvalue : Lvalue 는 객체를 참조하는 표현식이다 [메모리 위치를 가지고 있다] 
+Rvalue : Lvalue 가 아닌 모든것이다. 
+	정확하게 말하자면, 구분가능한 메모리 영역을 가지는 객체를 나타낼 필요가 없는 표현식이다 (임시로 존재하는것일 수 있다).
+
+glvalue는 평가에서 개체, 비트 필드 또는 함수의 ID를 결정하는 식입니다.
+prvalue는 계산에서 개체 또는 비트 필드를 초기화하거나 표시되는 컨텍스트에 지정된 대로 연산자의 피연산자 값을 계산하는 식입니다.
+xvalue는 리소스를 다시 사용할 수 있는 개체 또는 비트 필드를 나타내는 glvalue입니다(일반적으로 수명이 거의 다 되었기 때문). 
+        예: rvalue 참조(8.3.2)와 관련된 특정 종류의 식은 반환 형식이 rvalue 참조이거나 rvalue 참조 형식으로 캐스팅되는 함수에 대한 호출과 같은 xvalue를 생성합니다.
+lvalue는 xvalue가 아닌 glvalue입니다.
+rvalue는 prvalue 또는 xvalue입니다.
+
+
+// lvalues_and_rvalues2.cpp
+int main()
+{
+    int i, j, *p;
+
+    // Correct usage: the variable i is an lvalue and the literal 7 is a prvalue.
+    i = 7;
+
+    // Incorrect usage: The left operand must be an lvalue (C2106).`j * 4` is a prvalue.
+    7 = i; // C2106
+    j * 4 = 7; // C2106
+
+    // Correct usage: the dereferenced pointer is an lvalue.
+    *p = i;
+
+    // Correct usage: the conditional operator returns an lvalue.
+    ((i < 3) ? i : j) = 7;
+
+    // Incorrect usage: the constant ci is a non-modifiable lvalue (C3892).
+    const int ci = 7;
+    ci = 9; // C3892
+}
+
+//-----------------------------------------------------------------------------------------------------------------
+int  NextVal_1(int* p) { return *(p + 1); }
+int* NextVal_2(int* p) { return (p + 1); }
+
+int main()
+{
+	int a[] = { 1,2,3,4,5 };
+	NextVal_1(a) = 9;   	// 에러. left operand must be l-value
+	*NextVal_2(a) = 9;    	// Fine. Now a[] = {1,9,3,4,5}   //역참조된 포인터는 Lvalue 
+}
