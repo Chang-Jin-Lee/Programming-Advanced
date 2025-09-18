@@ -1,198 +1,284 @@
-﻿/*
-* @brief   : STL 연습 과제 — 컨테이너/알고리즘/함수객체/람다 실습
-* @details :
-*   - 이 파일은 vector/list/map과 표준 알고리즘(for_each, sort, unique, remove_if,
-*     accumulate, count_if, splice 등)을 예제로 다룹니다.
-*   - 핵심 포인트
-*       1) remove–erase idiom의 정확한 사용 (특히 sequence 컨테이너)
-*       2) unique는 "연속" 중복만 제거 → 보편적 중복 제거 시 정렬 후 unique
-*       3) list 전용 멤버(remove_if, splice) 활용
-*       4) 비교 함수/함수객체의 const-정확성
-*   - 참고: 표준 C++의 진입점은 int main() 권장(현 코드는 void main()).
-*/
+﻿//---------------------------------------------------------------------------------
+// B 클래스인지 검사해서 맞다면 맴버 값을 출력하는 코드를 작성하세요.
+//#include <iostream>
+//
+//struct A { virtual void vf() {} };
+//struct B : public A { int m = 100; };
+//
+//void memberPrint(A* a)
+//{
+//	if (B* b = dynamic_cast<B*>(a))
+//	{
+//		std::cout << b->m << "\n";
+//	}
+//	else
+//	{
+//		std::cout << "Not B class\n";
+//	}
+//}
+//
+//int main() {
+//	A a;
+//	B b;
+//	memberPrint(&a);
+//	memberPrint(&b);
+//}
+
+
+//#include <iostream>
+//
+//class A {
+//public:
+//	A() { std::cout << "A()\n"; }
+//	A(const A& a) { std::cout << "A() copy\n"; }
+//	A(A&& a) { std::cout << "A() move\n"; }
+//};
+//
+//class B {
+//public:
+//	B(A a) : m_a(std::move(a)) {  }
+//	A m_a;
+//};
+//
+//int main() {
+//	A a;
+//	std::cout << "create B \n";
+//	B b(std::move(a));							//???
+//}
+//
+
+
+//#include <iostream>
+//
+//class A {};
+//
+//void foo(A& a) { std::cout << "A&" << std::endl; }
+//void foo(const A& a) { std::cout << "const A&" << std::endl; }
+//void foo(A&& a) { std::cout << "A&&" << std::endl; }
+//
+//template <typename T>
+//void wrapper(T&& u) {		
+//
+//	//foo(u);
+//	foo(std::forward<T>( u ));	
+//}
+//
+//template <typename T>
+//void wrapper2(T&& u) {
+//
+//	//foo(u);
+//	foo(std::move<T>(u));
+//}
+//
+//int main() {
+//	A a;
+//	const A ca;
+//
+//	//std::cout << "원본 --------" << std::endl;
+//	//foo(a);
+//	//foo(ca);
+//	//foo(A());		//
+//
+//	std::cout << "Wrapper -----" << std::endl;
+//	wrapper(a);
+//	wrapper(ca);
+//	wrapper(A());	//
+//
+//	std::cout << "move -----" << std::endl;
+//	wrapper2(a);
+//	wrapper2(ca);
+//	//wrapper2(A());	//
+//}
+
+
+// 20250918
+//#include <iostream>
+//using namespace std;
+//
+//class Test
+//{
+//	int num;
+//public:
+//	Test() : num(0) { cout << "Test(): " << num << endl; }
+//	Test(int num) : num(num) { cout << "Test(int): " << num << endl; }
+//	void Print() { cout << num << endl; }
+//};
+//
+//int main()
+//{
+//	// 동적 배열
+//	Test* pTest = new Test[3]{ Test(1), Test(2), Test(3) };
+//	for (int i = 0; i < 3; i++) pTest[i].Print();
+//	delete[] pTest;
+//
+//	// 정적 배열
+//	Test* pTest2[3] = {new Test(1), new Test(2), new Test(3)};
+//	for (int i = 0; i < 3; i++) pTest2[i]->Print();
+//	for (int i = 0; i < 3; i++) pTest2[i];
+//
+//
+//
+//	Test* ptest1 = new Test;
+//	Test* ptest2 = new Test(10);
+//	delete ptest1;
+//	delete ptest2;
+//
+//	Test* plist = new Test[3]{ Test(1), Test(2),Test(3) };
+//	for (size_t i = 0; i < 3; i++)
+//	{
+//		plist[i].Print();
+//	}
+//	delete[] plist;
+//
+//
+//	Test** plist2 = new Test * [3] { new Test(4), new Test(5), new Test(6) };
+//	for (size_t i = 0; i < 3; i++)
+//	{
+//		plist2[i]->Print();
+//	}
+//	delete plist2[0];
+//	delete plist2[1];
+//	delete plist2[2];
+//	delete[] plist2;
+//
+//	return 0;
+//}
+
+//#include <iostream>
+//#include <memory>
+//
+//class A 
+//{
+//	int* data;
+//public:
+//	A() { data = new int[100]; }
+//	~A() { delete[] data; }
+//	void some() { std::cout << "some()" << std::endl; }
+//};
+//
+//template<typename T>
+//class SPtr
+//{
+//	T* data;
+//public:
+//	SPtr(T* d) : data(d) {}
+//	~SPtr() { delete data; }
+//	SPtr(const SPtr& d) = delete;
+//	T& operator*() const { return *data; }
+//	T* operator->() const { return data; }
+//};
+//
+//
+//void ex()
+//{
+//	SPtr<A> sp(new A());
+//	sp->some();
+//
+//	// 복사를 막아야함
+//	//SPtr<A> sp2(sp);
+//}
+//
+//int main() { ex(); }
+
+
+
+
+// #include <iostream>
+// #include <memory>                       // #include <memory> 
+// #include <vector>
+// #include <algorithm>
+// using namespace std;
+// 
+// 
+// class Player {
+// public:
+// 	Player() : name("") {}
+// 	Player(string n) : name(n) {}
+// 	string name;
+// };
+// 
+// int main()
+// {
+// 	// Player* [3] // p1,p2,p3;
+// 	vector<unique_ptr<Player>> players;
+// 	players.emplace_back(make_unique<Player>("1"));
+// 	players.emplace_back(make_unique<Player>("2"));
+// 	players.emplace_back(make_unique<Player>("3"));
+// 
+// 	for (auto& player : players) cout << player->name << endl;
+// 
+// 	for_each(players.begin(), players.end(), [](const unique_ptr<Player>& player) { cout << player->name << endl; });
+// }
+
+
+
+
+
+//#include <iostream>
+//#include <memory>
+//#include <vector>
+//using namespace std;
+//
+//class Player {
+//public:
+//	Player() : name("") {}
+//	Player(string n) : name(n) {}
+//	virtual ~Player() { cout << "~Player()" << '\n'; }  //가상함수
+//	string name;
+//};
+//
+//class Hero : public Player {
+//public:
+//	Hero(string n) : Player(n) {}
+//};
+//
+//class Enemy : public Player {
+//public:
+//	Enemy(string n) : Player(n) {}
+//};
+//
+//template<typename Ts>
+//auto makePlayer(Ts&& params)             //팩토리 함수
+//{
+//	auto myDeleter = [](Player* pPlayer) { delete pPlayer; };
+//
+//	std::unique_ptr<Player, decltype(myDeleter)> pPlayer(nullptr, myDeleter);
+//
+//	if (params == "hero") {
+//		pPlayer.reset(new Hero(std::forward<Ts>(params)));
+//	}
+//	else {
+//		pPlayer.reset(new Enemy(std::forward<Ts>(params)));
+//	}
+//	return pPlayer;
+//}
+//
+//int main() {
+//
+//	//std::unique_ptr<Player> pPlayer(nullptr);
+//	//pPlayer.reset(new Hero("hero") );
+//
+//	auto hero = makePlayer<string>("hero");
+//	cout << hero->name << '\n';
+//
+//	auto enemy = makePlayer<string>("enemy");
+//	cout << enemy->name << '\n';
+//
+//}
+
 
 #include <iostream>
+#include <memory>
 #include <vector>
-#include <list>
-#include <map>
-#include <algorithm>
-#include <functional>
-#include <numeric>
-#include <string> // @brief: std::string 사용을 위한 헤더
-
 using namespace std;
+class A
+{
 
-/*
-* @brief   : 내림차순 비교 함수 객체
-* @details :
-*   - sort의 비교자로 사용합니다.
-*   - 매개변수는 값 복사 가능하나, const 참조 + operator() const 권장.
-*/
-struct CompareGrater {
-	bool operator()(int a, int b) {
-		return a > b;
-	}
 };
 
-void main()
+int main()
 {
-	/*
-	* @brief   : 문자열을 vector에 담아 출력
-	* @details :
-	*   - 컨테이너: vector<string>
-	*   - 알고리즘: for_each + 람다
-	*   - 출력 포맷: 공백 구분 일렬 출력
-	*/
-	// "apple","melon","banana"
-	vector<string> fruits = { "apple", "melon", "banana" };
-	for_each(fruits.begin(), fruits.end(), [](const string& fruit) {cout << fruit << " "; });
-	cout << endl;
+	shared_ptr<A> pA = make_shared<A>();
+	shared_ptr<A> pB = pA;
 
-	/*
-	* @brief   : 벡터를 내림차순 정렬 후 출력
-	* @details :
-	*   - 컨테이너: vector<int>
-	*   - 알고리즘: sort(비교자에 함수객체 사용), for_each로 출력
-	*   - 비교자: CompareGrater (철자상 Greater가 자연스럽지만 의도대로 동작)
-	*/
-	{
-		vector<int>  vec = { 1,3,2,7,5,9 };
-		sort(vec.begin(), vec.end(), CompareGrater());
-		for_each(vec.begin(), vec.end(), [](int n) {cout << n << " "; });
-	}
-	cout << endl;
-
-	/*
-	* @brief   : 벡터에서 10보다 큰 원소 제거
-	* @details :
-	*   - 컨테이너: vector<int>
-	*   - 알고리즘: remove_if로 "뒤로 몰기", erase로 꼬리 구간 삭제(정석 패턴)
-	*   - 패턴명: remove–erase idiom
-	*/
-	{
-		vector<int>  v = { 11, 3, 25, 71, 5, 9, 12, 7, 89 };
-		v.erase(remove_if(v.begin(), v.end(), [](const int& n) { return n > 10; }), v.end());
-		for_each(v.begin(), v.end(), [](int& n) { cout << n << " "; });
-	}
-	cout << endl;
-
-	/*
-	* @brief   : 벡터에서 홀수의 개수 세기
-	* @details :
-	*   - 컨테이너: vector<int>
-	*   - 알고리즘: count_if(람다로 홀수 조건 지정)
-	*/
-	{
-		vector<int>  v = { 3,2,7,9,4,1,3 };
-		cout << count_if(v.begin(), v.end(), [](const int& n) { return n % 2 != 0; }) << endl;
-	}
-	cout << endl;
-
-	/*
-	* @brief   : 벡터의 중복 제거 (unique 사용)
-	* @details :
-	*   - unique는 "연속된" 중복만 제거합니다.
-	*   - 일반적 의미의 중복 제거를 원하면 sort - unique - erase 순서를 권장합니다.
-	*   - 현재 코드는 연속 중복만 제거한다는 점을 주석으로 명시합니다.
-	*   - 예) {1,1,2,3,4,5,3,3,5,6} → unique만 쓰면 뒤쪽 3,5는 남음.
-	*/
-	{
-		vector <int> v = { 1,1,2,3,4,5,3,3,5,6 };
-		v.erase(unique(v.begin(), v.end()), v.end());
-		for_each(v.begin(), v.end(), [](int& n) { cout << n << " "; });
-	}
-	cout << endl;
-
-	/*
-	* @brief   : 리스트에서 10보다 작은 숫자 제거
-	* @details :
-	*   - 컨테이너: std::list<int>
-	*   - 주의: list에는 list::remove_if(멤버)가 있어 그 사용을 권장합니다.
-	*   - remove–erase idiom을 쓰려면 erase(remove_if(...), end()) 형태여야 합니다.
-	*   - 현 코드: erase(iterator) 한 개 원소만 지우므로 의도와 다를 수 있음(학습 주석).
-	*   - 권장 대안(예시):
-	*       ls.remove_if([](int n){ return n < 10; });            // list 멤버
-	*       // 또는
-	*       ls.erase(remove_if(ls.begin(), ls.end(),
-	*                          [](int n){ return n < 10; }), ls.end()); // idiom
-	*/
-	list<int> ls = { 11, 3, 25, 71, 5, 9, 12, 7, 89 };
-	ls.erase(remove_if(ls.begin(), ls.end(), [](const int& n) { return n < 10; }));
-	for_each(ls.begin(), ls.end(), [](int& n) { cout << n << " "; });
-	cout << endl;
-
-	/*
-	* @brief   : 리스트에서 특정 값(2) 삭제
-	* @details :
-	*   - 패턴: erase(remove_if(...), end()) 사용 → 값이 2인 원소 제거
-	*   - 대안: ls.remove_if([](int n){ return n == 2; }); (list 전용 멤버)
-	*/
-	{
-		std::list<int> ls = { 1,2,2,3,2,4,2 };
-		ls.erase(remove_if(ls.begin(), ls.end(), [](const int& n) { return n == 2; }), ls.end());
-		for_each(ls.begin(), ls.end(), [](int& n) { cout << n << " "; });
-	}
-	cout << endl;
-
-	/*
-	* @brief   : 두 리스트를 하나로 합치기(splice)
-	* @details :
-	*   - 요구 결과 예시: { 1,2,10,20,30,3,4,5 }
-	*   - 현 구현: 빈 리스트에 list1, list2를 순서대로 splice → {1,2,3,4,5,10,20,30}
-	*   - 특정 위치(예: 2 뒤)에 끼워 넣으려면 pos를 계산하여 splice 해야 함(학습 포인트).
-	*/
-	list<int> list1 = { 1,2,3,4,5 };
-	list<int> list2 = { 10,20,30 };
-
-	list<int> splicedList;
-	splicedList.splice(splicedList.end(), list1);
-	splicedList.splice(splicedList.end(), list2);
-	for_each(splicedList.begin(), splicedList.end(), [](int& n) { cout << n << " "; });
-	cout << endl;
-
-	/*
-	* @brief   : 리스트 각 원소에 2를 더한 "값"을 출력
-	* @details :
-	*   - 변형 출력: 원본을 변경하지 않고 n+2를 출력만 합니다.
-	*   - 원본 변경을 원한다면 for (int& n : list3) n += 2; 방식 사용.
-	*/
-	list<int> list3 = { 1,2,3,4,5 };
-	for_each(list3.begin(), list3.end(), [](int& n) { cout << n + 2 << " "; });
-	cout << endl;
-
-	/*
-	* @brief   : 벡터 원소 합 구하기
-	* @details :
-	*   - 알고리즘: std::accumulate
-	*   - 초기값: 0 (int 합)
-	*/
-	{
-		std::vector<int> v2{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-		int acumulatedSum = accumulate(v2.begin(), v2.end(), 0);
-		cout << acumulatedSum;
-	}
-	cout << endl;
-
-	/*
-	* @brief   : map을 이용해 (이름, 점수) 랭킹을 출력
-	* @details :
-	*   - 컨테이너: map<string,int> → (정렬을 위해) vector<pair<...>>로 복사
-	*   - 정렬 기준: 점수 내림차순 (동점자 처리 기준 추가 가능)
-	*   - 출력: 이름과 점수
-	*/
-	// 민수 10000, 수연 5200, 지수 2500, 민호 5200
-	map<string, int> scoreMap{ {"민수", 10000}, {"수연", 5200}, {"지수", 2500}, {"민호", 5200} };
-	vector<pair<string, int>> scoreVec(scoreMap.begin(), scoreMap.end());
-	sort(scoreVec.begin(), scoreVec.end(), [](auto& a, auto& b) { return a.second > b.second; });
-	for_each(scoreVec.begin(), scoreVec.end(), [](const auto& unit) { cout << ' ' << unit.first << ' ' << unit.second << '\n'; });
-	cout << endl;
-
-	/*
-	* @brief   : 범위[7,10]에 속하는 숫자의 개수 세기
-	* @details :
-	*   - 컨테이너: vector<int>
-	*   - 알고리즘: count_if (경계 포함: >=7 && <=10)
-	*/
-	vector<int> arr = { 1,3,5,5,7,8,8,10,10,11,13 };
-	cout << count_if(arr.begin(), arr.end(), [](const int& n) { return n >= 7 && n <= 10; }) << endl;
 }
