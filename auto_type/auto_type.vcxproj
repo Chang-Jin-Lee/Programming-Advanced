@@ -34,6 +34,7 @@
     <ProjectGuid>{b0957df1-c249-42d3-8b8d-670e2c720e0c}</ProjectGuid>
     <RootNamespace>autotype</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>04_auto_type</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
