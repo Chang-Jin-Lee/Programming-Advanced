@@ -15,12 +15,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="smartPointer.cpp">
+    <ClCompile Include="unique_ptr.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="shared_ptr.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="weak_ptr.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="smartPointer.md">
+    <None Include="unique_ptr.md">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="shared_ptr.md">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="weak_ptr.md">
       <Filter>소스 파일</Filter>
     </None>
   </ItemGroup>
